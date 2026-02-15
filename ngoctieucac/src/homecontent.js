@@ -1,12 +1,11 @@
 load('config.js');
 
 function execute(url, page) {
-    let requestUrl = BASE_URL;
+    var requestUrl = BASE_URL;
 
     if (url === "new") {
         requestUrl = BASE_URL + "/danh-sach?sapXep=capNhat";
     } else {
-        // hot / default
         requestUrl = BASE_URL + "/danh-sach?sapXep=xuHuong";
     }
 
@@ -23,54 +22,37 @@ function execute(url, page) {
         let doc = response.html();
         let novelList = [];
 
-        // Find all story links on listing pages
-        let items = doc.select("a[href^='/truyen/']");
-        let seen = new Set();
+        doc.select("a[href*='/truyen/']").forEach(function (e) {
+            let link = e.attr("href");
+            if (!link || link.indexOf("/chuong-") !== -1) return;
 
-        for (let i = 0; i < items.size(); i++) {
-            let a = items.get(i);
-            let href = a.attr("href");
-
-            // Only book-level links (/truyen/slug), not chapter links
-            let cleanHref = href.split('?')[0].split('#')[0];
-            if (cleanHref.endsWith('/')) cleanHref = cleanHref.slice(0, -1);
-            let parts = cleanHref.split('/');
-
-            if (parts.length === 3 && !seen.has(cleanHref)) {
-                seen.add(cleanHref);
-                let name = a.text().trim();
-
-                if (!name || name.length < 2) {
-                    let container = a.parent();
-                    let nameEl = container.select("h1, h2, h3, h4, .line-clamp-2").first();
-                    if (nameEl) name = nameEl.text().trim();
-                }
-
-                let cover = "";
-                let imgEl = a.select("img").first();
-                if (imgEl) {
-                    cover = imgEl.attr("data-src");
-                    if (!cover) cover = imgEl.attr("src");
-                }
-                if (!cover) {
-                    let container = a.parent();
-                    imgEl = container.select("img").first();
-                    if (imgEl) {
-                        cover = imgEl.attr("data-src");
-                        if (!cover) cover = imgEl.attr("src");
-                    }
-                }
-
-                if (name && name.length > 1) {
-                    novelList.push({
-                        name: name,
-                        link: cleanHref,
-                        cover: cover,
-                        host: BASE_URL
-                    });
-                }
+            let name = "";
+            let titleEl = e.select("h3").first();
+            if (titleEl) {
+                name = titleEl.text().trim();
+            } else {
+                name = e.text().trim();
             }
-        }
+            if (!name || name.length < 2) return;
+
+            let cover = "";
+            let imgEl = e.select("img").first();
+            if (!imgEl) {
+                let parent = e.parent();
+                if (parent) imgEl = parent.select("img").first();
+            }
+            if (imgEl) {
+                cover = imgEl.attr("data-src");
+                if (!cover) cover = imgEl.attr("src");
+            }
+
+            novelList.push({
+                name: name,
+                link: link,
+                cover: cover,
+                host: BASE_URL
+            });
+        });
 
         // Pagination
         let next = null;
@@ -79,7 +61,7 @@ function execute(url, page) {
         if (pageLinks.size() > 0) {
             let lastLink = pageLinks.last();
             let href = lastLink.attr("href");
-            if (href) {
+            if (href && href.indexOf("trang=") !== -1) {
                 let match = href.match(/trang=(\d+)/);
                 if (match && parseInt(match[1]) > currentPage) {
                     next = "" + (currentPage + 1);

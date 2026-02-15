@@ -12,7 +12,6 @@
     },
     "script": {
         "home": "home.js",
-        "homecontent": "homecontent.js",
         "detail": "detail.js",
         "search": "search.js",
         "toc": "toc.js",

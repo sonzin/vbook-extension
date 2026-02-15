@@ -1,0 +1,19 @@
+{
+    "metadata": {
+        "name": "Ngọc Tiếu Các",
+        "author": "Antigravity",
+        "version": "1.0.0",
+        "source": "https://ngoctieucac.com",
+        "type": "novel",
+        "description": "Đọc truyện trên ngoctieucac.com",
+        "locale": "vi_VN",
+        "language": "javascript"
+    },
+    "script": {
+        "home": "home.js",
+        "search": "search.js",
+        "detail": "detail.js",
+        "toc": "toc.js",
+        "chap": "chap.js"
+    }
+}

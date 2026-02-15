@@ -47,16 +47,6 @@
             "description": "Đọc truyện trên trang Truyện Net",
             "type": "novel",
             "locale": "vi_VN"
-        },
-        {
-            "name": "OpenAI Translate",
-            "author": "vBook",
-            "path": "https://raw.githubusercontent.com/sonzin/vbook-extension/main/openai-translate/plugin.zip",
-            "version": 1,
-            "source": "https://api.vectorengine.ai",
-            "icon": "https://raw.githubusercontent.com/sonzin/vbook-extension/main/openai-translate/icon.png",
-            "description": "Dịch truyện bằng OpenAI Compatible API",
-            "type": "translate"
         }
     ]
 }

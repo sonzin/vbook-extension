@@ -1,21 +1,62 @@
 {
-  "metadata": {
-    "name": "U Mê Truyện",
-    "author": "vBook",
-    "version": 11,
-    "source": "https://umetruyenz.org/",
-    "regexp": "(www.)?umetruyen.*?/[^/]+.html$",
-    "description": "Đọc truyện trên trang U Mê Truyện",
-    "locale": "vi_VN",
-    "language": "javascript",
-    "type": "comic"
-  },
-  "script": {
-    "home": "home.js",
-    "genre": "genre.js",
-    "detail": "detail.js",
-    "search": "search.js",
-    "toc": "toc.js",
-    "chap": "chap.js"
-  }
+    "metadata": {
+        "author": "sonzin",
+        "description": "Custom vBook Extensions"
+    },
+    "data": [
+        {
+            "name": "Ngọc Tiếu Các",
+            "author": "Antigravity",
+            "path": "https://raw.githubusercontent.com/sonzin/vbook-extension/main/ngoctieucac/plugin.zip",
+            "version": 1,
+            "source": "https://ngoctieucac.com",
+            "icon": "https://raw.githubusercontent.com/sonzin/vbook-extension/main/ngoctieucac/icon.png",
+            "description": "Đọc truyện trên ngoctieucac.com",
+            "type": "novel",
+            "locale": "vi_VN"
+        },
+        {
+            "name": "U Mê Truyện",
+            "author": "vBook",
+            "path": "https://raw.githubusercontent.com/sonzin/vbook-extension/main/umetruyen/plugin.zip",
+            "version": 11,
+            "source": "https://umetruyenz.org/",
+            "icon": "https://raw.githubusercontent.com/sonzin/vbook-extension/main/umetruyen/icon.png",
+            "description": "Đọc truyện trên trang U Mê Truyện",
+            "type": "comic",
+            "locale": "vi_VN"
+        },
+        {
+            "name": "Tiệm Truyện Chữ",
+            "author": "vBook",
+            "path": "https://raw.githubusercontent.com/sonzin/vbook-extension/main/tiemtruyenchu/plugin.zip",
+            "version": 1,
+            "source": "https://www.tiemtruyenchu.com/",
+            "icon": "https://raw.githubusercontent.com/sonzin/vbook-extension/main/tiemtruyenchu/icon.png",
+            "description": "Đọc truyện trên trang Tiệm Truyện Chữ",
+            "type": "novel",
+            "locale": "vi_VN"
+        },
+        {
+            "name": "Truyện Net",
+            "author": "vBook",
+            "path": "https://raw.githubusercontent.com/sonzin/vbook-extension/main/truyennet/plugin.zip",
+            "version": 1,
+            "source": "https://truyennet.vn/",
+            "icon": "https://raw.githubusercontent.com/sonzin/vbook-extension/main/truyennet/icon.png",
+            "description": "Đọc truyện trên trang Truyện Net",
+            "type": "novel",
+            "locale": "vi_VN"
+        },
+        {
+            "name": "OpenAI Translate",
+            "author": "vBook",
+            "path": "https://raw.githubusercontent.com/sonzin/vbook-extension/main/openai-translate/plugin.zip",
+            "version": 1,
+            "source": "https://api.vectorengine.ai",
+            "icon": "https://raw.githubusercontent.com/sonzin/vbook-extension/main/openai-translate/icon.png",
+            "description": "Dịch truyện bằng OpenAI Compatible API",
+            "type": "translate"
+        }
+    ]
 }

@@ -1,0 +1,20 @@
+{
+    "metadata": {
+        "name": "OpenAI Translate",
+        "author": "vBook",
+        "version": 1,
+        "source": "https://api.vectorengine.ai",
+        "description": "Dịch truyện bằng OpenAI Compatible API",
+        "type": "translate"
+    },
+    "script": {
+        "language": "language.js",
+        "translate": "translate.js"
+    },
+    "config": {
+        "support_auto_detect": true,
+        "max_length": 4000,
+        "required_api_key": true,
+        "support_url": "https://api.vectorengine.ai"
+    }
+}

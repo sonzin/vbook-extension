@@ -1,16 +1,29 @@
 load('config.js');
 
-function execute(key, page) {
-    let url = BASE_URL + "/tim-kiem?tuKhoa=" + encodeURIComponent(key);
-    if (page) {
-        url = url + "&trang=" + page;
+function execute(url, page) {
+    let requestUrl = BASE_URL;
+
+    if (url === "new") {
+        requestUrl = BASE_URL + "/danh-sach?sapXep=capNhat";
+    } else {
+        // hot / default
+        requestUrl = BASE_URL + "/danh-sach?sapXep=xuHuong";
     }
 
-    let response = fetch(url);
+    if (page) {
+        if (requestUrl.indexOf("?") !== -1) {
+            requestUrl = requestUrl + "&trang=" + page;
+        } else {
+            requestUrl = requestUrl + "?trang=" + page;
+        }
+    }
+
+    let response = fetch(requestUrl);
     if (response.ok) {
         let doc = response.html();
         let novelList = [];
 
+        // Find all story links on listing pages
         let items = doc.select("a[href^='/truyen/']");
         let seen = new Set();
 
@@ -18,6 +31,7 @@ function execute(key, page) {
             let a = items.get(i);
             let href = a.attr("href");
 
+            // Only book-level links (/truyen/slug), not chapter links
             let cleanHref = href.split('?')[0].split('#')[0];
             if (cleanHref.endsWith('/')) cleanHref = cleanHref.slice(0, -1);
             let parts = cleanHref.split('/');
@@ -37,6 +51,14 @@ function execute(key, page) {
                 if (imgEl) {
                     cover = imgEl.attr("data-src");
                     if (!cover) cover = imgEl.attr("src");
+                }
+                if (!cover) {
+                    let container = a.parent();
+                    imgEl = container.select("img").first();
+                    if (imgEl) {
+                        cover = imgEl.attr("data-src");
+                        if (!cover) cover = imgEl.attr("src");
+                    }
                 }
 
                 if (name && name.length > 1) {

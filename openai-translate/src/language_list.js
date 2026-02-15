@@ -1,0 +1,41 @@
+let languages = [
+    { "id": "vi" },
+    { "id": "zh" },
+    { "id": "en" },
+    { "id": "ja" },
+    { "id": "ko" },
+    { "id": "fr" },
+    { "id": "de" },
+    { "id": "es" },
+    { "id": "pt" },
+    { "id": "ru" },
+    { "id": "th" },
+    { "id": "ar" },
+    { "id": "hi" },
+    { "id": "it" },
+    { "id": "nl" },
+    { "id": "tr" },
+    { "id": "ms" },
+    { "id": "tl" }
+]
+
+const languageMap = {
+    "vi": "Vietnamese",
+    "zh": "Chinese",
+    "en": "English",
+    "ja": "Japanese",
+    "ko": "Korean",
+    "fr": "French",
+    "de": "German",
+    "es": "Spanish",
+    "pt": "Portuguese",
+    "ru": "Russian",
+    "th": "Thai",
+    "ar": "Arabic",
+    "hi": "Hindi",
+    "it": "Italian",
+    "nl": "Dutch",
+    "tr": "Turkish",
+    "ms": "Malay",
+    "tl": "Filipino"
+}

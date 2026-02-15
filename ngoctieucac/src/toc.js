@@ -28,7 +28,7 @@ function execute(url) {
                     let slug = chap.slug || ("chuong-" + chap.chapterNumber);
                     data.push({
                         name: chap.title || ("Chương " + chap.chapterNumber),
-                        url: url.endsWith("/") ? (url + slug) : (url + "/" + slug),
+                        link: url.endsWith("/") ? (url + slug) : (url + "/" + slug),
                         host: BASE_URL
                     });
                 }
@@ -41,7 +41,7 @@ function execute(url) {
                         let n = m.match(/"chapterNumber":(\d+)/)[1];
                         data.push({
                             name: t,
-                            url: url.endsWith("/") ? (url + "chuong-" + n) : (url + "/chuong-" + n),
+                            link: url.endsWith("/") ? (url + "chuong-" + n) : (url + "/chuong-" + n),
                             host: BASE_URL
                         });
                     });
@@ -61,7 +61,7 @@ function execute(url) {
             while ((m = pattern.exec(html)) !== null) {
                 data.push({
                     name: m[1],
-                    url: url.endsWith("/") ? (url + m[2]) : (url + "/" + m[2]),
+                    link: url.endsWith("/") ? (url + m[2]) : (url + "/" + m[2]),
                     host: BASE_URL
                 });
             }

@@ -1,18 +1,20 @@
 {
     "metadata": {
         "name": "Ngọc Tiếu Các",
-        "author": "Antigravity",
-        "version": "1.0.0",
+        "author": "sonzin",
+        "version": 1,
         "source": "https://ngoctieucac.com",
-        "type": "novel",
-        "description": "Đọc truyện trên ngoctieucac.com",
+        "regexp": "(www.)?ngoctieucac\\.com/truyen/[^/]+$",
+        "description": "Đọc truyện trên trang Ngọc Tiếu Các",
         "locale": "vi_VN",
-        "language": "javascript"
+        "language": "javascript",
+        "type": "novel"
     },
     "script": {
         "home": "home.js",
-        "search": "search.js",
+        "homecontent": "homecontent.js",
         "detail": "detail.js",
+        "search": "search.js",
         "toc": "toc.js",
         "chap": "chap.js"
     }

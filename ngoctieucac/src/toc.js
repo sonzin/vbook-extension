@@ -6,29 +6,44 @@ function execute(url) {
     }
     url = url.replace(/^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:\/\n?]+)/img, BASE_URL);
 
-    let response = fetch(url);
+    let response = authFetch(url);
     if (response.ok) {
-        let html = response.text();
+        let text = response.text();
         let data = [];
 
-        // Strategy 1: Parse chapters from embedded JSON in page source
-        // ngoctieucac.com uses Next.js which embeds chapter data in script tags
-        let chaptersMatch = html.match(/"chapters"\s*:\s*(\[.*?\])/);
-        if (chaptersMatch) {
-            try {
-                let rawChapters = JSON.parse(chaptersMatch[1]);
-                for (let i = 0; i < rawChapters.length; i++) {
-                    let chap = rawChapters[i];
-                    let slug = chap.slug || ("chuong-" + chap.chapterNumber);
-                    data.push({
-                        name: chap.title || ("Chương " + chap.chapterNumber),
-                        url: url.endsWith("/") ? (url + slug) : (url + "/" + slug),
-                        host: BASE_URL
-                    });
+        // Strategy 1: Parse chapters from self.__next_f.push scripts
+        // ngoctieucac.com embeds ALL chapter data in Next.js RSC payload
+        // Pattern: "title":"Chapter Title","chapterNumber":N
+        let allMatches = text.match(/"title":"[^"]*","chapterNumber":\d+/g);
+        if (allMatches && allMatches.length > 0) {
+            let seen = {};
+            for (let i = 0; i < allMatches.length; i++) {
+                let m = allMatches[i];
+                let titleMatch = m.match(/"title":"([^"]*)"/);
+                let numMatch = m.match(/"chapterNumber":(\d+)/);
+                if (titleMatch && numMatch) {
+                    let title = titleMatch[1];
+                    let num = parseInt(numMatch[1]);
+                    if (!seen[num]) {
+                        seen[num] = true;
+                        // Unescape unicode
+                        title = title.replace(/\\u([0-9a-fA-F]{4})/g, function (match, grp) {
+                            return String.fromCharCode(parseInt(grp, 16));
+                        });
+                        data.push({
+                            name: title || ("Chương " + num),
+                            url: url.endsWith("/") ? (url + "chuong-" + num) : (url + "/chuong-" + num),
+                            host: BASE_URL
+                        });
+                    }
                 }
-            } catch (e) {
-                // JSON parse failed, try regex fallback
             }
+            // Sort by chapter number
+            data.sort(function (a, b) {
+                let numA = parseInt(a.url.match(/chuong-(\d+)/)[1]);
+                let numB = parseInt(b.url.match(/chuong-(\d+)/)[1]);
+                return numA - numB;
+            });
         }
 
         // Strategy 2: Fallback - find chapter links in HTML

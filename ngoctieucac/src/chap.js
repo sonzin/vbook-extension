@@ -6,7 +6,7 @@ function execute(url) {
     }
     url = url.replace(/^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:\/\n?]+)/img, BASE_URL);
 
-    let response = fetch(url);
+    let response = authFetch(url);
     if (response.ok) {
         let doc = response.html();
 
@@ -19,7 +19,17 @@ function execute(url) {
             return Response.success(contentEl.html());
         }
 
-        // Fallback selectors
+        // Fallback: collect all p.leading-relaxed
+        let paragraphs = doc.select("p.leading-relaxed");
+        if (paragraphs.size() > 0) {
+            let html = "";
+            for (let i = 0; i < paragraphs.size(); i++) {
+                html += paragraphs.get(i).outerHtml();
+            }
+            return Response.success(html);
+        }
+
+        // Last resort: try common content selectors
         let fallbackSelectors = [".chapter-content", "#chapter-content", "#content", ".reading-content"];
         for (var i = 0; i < fallbackSelectors.length; i++) {
             let el = doc.select(fallbackSelectors[i]).first();
@@ -29,16 +39,6 @@ function execute(url) {
                 el.select("iframe").remove();
                 return Response.success(el.html());
             }
-        }
-
-        // Last resort: find longest text block
-        let paragraphs = doc.select("p.leading-relaxed");
-        if (paragraphs.size() > 0) {
-            let html = "";
-            for (let i = 0; i < paragraphs.size(); i++) {
-                html += paragraphs.get(i).outerHtml();
-            }
-            return Response.success(html);
         }
     }
 

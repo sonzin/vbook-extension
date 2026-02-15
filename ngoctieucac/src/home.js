@@ -1,6 +1,7 @@
 function execute() {
     return Response.success([
-        { title: "Truyện hot", input: "hot", script: "homecontent.js" },
-        { title: "Mới cập nhật", input: "new", script: "homecontent.js" }
+        { title: "Xem nhiều", input: "hot", script: "homecontent.js" },
+        { title: "Truyện hot", input: "trending", script: "homecontent.js" },
+        { title: "Đề cử", input: "recommend", script: "homecontent.js" }
     ]);
 }

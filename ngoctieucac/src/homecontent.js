@@ -1,46 +1,42 @@
 load('config.js');
 
 function execute(url, page) {
-    var requestUrl = BASE_URL;
-
-    if (url === "new") {
-        requestUrl = BASE_URL + "/danh-sach?sapXep=capNhat";
-    } else {
-        requestUrl = BASE_URL + "/danh-sach?sapXep=xuHuong";
-    }
-
-    if (page) {
-        if (requestUrl.indexOf("?") !== -1) {
-            requestUrl = requestUrl + "&trang=" + page;
-        } else {
-            requestUrl = requestUrl + "?trang=" + page;
-        }
-    }
-
-    let response = fetch(requestUrl);
+    // ngoctieucac.com is a Next.js site - listing pages render client-side only
+    // We must scrape from the homepage which has SSR content
+    let response = fetch(BASE_URL);
     if (response.ok) {
         let doc = response.html();
         let novelList = [];
 
-        doc.select("a[href*='/truyen/']").forEach(function (e) {
-            let link = e.attr("href");
-            if (!link || link.indexOf("/chuong-") !== -1) return;
+        // The homepage has multiple sections with h2 headers:
+        // "Xem Nhiều", "Mới nhất", "Đề Cử", "Khám Phá", "Truyện Hot"
+        // Each section contains story links with h3 titles
+
+        // Find all story links on the homepage
+        let items = doc.select("a[href*='/truyen/']");
+        let seen = {};
+
+        for (let i = 0; i < items.size(); i++) {
+            let a = items.get(i);
+            let link = a.attr("href");
+
+            // Only book-level links, skip chapter links
+            if (!link || link.indexOf("/chuong-") !== -1) continue;
+            if (seen[link]) continue;
+            seen[link] = true;
 
             let name = "";
-            let titleEl = e.select("h3").first();
+            let titleEl = a.select("h3").first();
             if (titleEl) {
                 name = titleEl.text().trim();
-            } else {
-                name = e.text().trim();
             }
-            if (!name || name.length < 2) return;
+            if (!name || name.length < 2) {
+                name = a.text().trim();
+            }
+            if (!name || name.length < 2) continue;
 
             let cover = "";
-            let imgEl = e.select("img").first();
-            if (!imgEl) {
-                let parent = e.parent();
-                if (parent) imgEl = parent.select("img").first();
-            }
+            let imgEl = a.select("img").first();
             if (imgEl) {
                 cover = imgEl.attr("data-src");
                 if (!cover) cover = imgEl.attr("src");
@@ -52,24 +48,9 @@ function execute(url, page) {
                 cover: cover,
                 host: BASE_URL
             });
-        });
-
-        // Pagination
-        let next = null;
-        let currentPage = page ? parseInt(page) : 1;
-        let pageLinks = doc.select("a[href*='trang=']");
-        if (pageLinks.size() > 0) {
-            let lastLink = pageLinks.last();
-            let href = lastLink.attr("href");
-            if (href && href.indexOf("trang=") !== -1) {
-                let match = href.match(/trang=(\d+)/);
-                if (match && parseInt(match[1]) > currentPage) {
-                    next = "" + (currentPage + 1);
-                }
-            }
         }
 
-        return Response.success(novelList, next);
+        return Response.success(novelList, null);
     }
 
     return null;

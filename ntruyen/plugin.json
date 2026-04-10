@@ -1,0 +1,20 @@
+{
+    "metadata": {
+        "name": "nTruyen",
+        "author": "sonzin",
+        "version": 1,
+        "source": "https://ntruyen.biz",
+        "regexp": "(www.)?ntruyen\\.biz/truyen/[^/]+$",
+        "description": "Đọc truyện trên trang nTruyen",
+        "locale": "vi_VN",
+        "language": "javascript",
+        "type": "novel"
+    },
+    "script": {
+        "home": "home.js",
+        "detail": "detail.js",
+        "search": "search.js",
+        "toc": "toc.js",
+        "chap": "chap.js"
+    }
+}

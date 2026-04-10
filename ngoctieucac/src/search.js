@@ -1,61 +1,40 @@
 load('config.js');
 
+var API_URL = "https://api.itruyenchu.com";
+
 function execute(key, page) {
-    var url = BASE_URL + "/tim-kiem?tuKhoa=" + encodeURIComponent(key);
-    if (page) {
-        url = url + "&trang=" + page;
-    }
+    var pageNum = page ? parseInt(page) : 1;
+    var url = API_URL + "/books?title=" + encodeURIComponent(key) + "&limit=20&page=" + pageNum;
 
     let response = fetch(url);
     if (response.ok) {
-        let doc = response.html();
+        let json = response.json();
         let novelList = [];
 
-        doc.select("a[href*='/truyen/']").forEach(function (e) {
-            let link = e.attr("href");
-            if (!link || link.indexOf("/chuong-") !== -1) return;
+        if (json.data) {
+            for (var i = 0; i < json.data.length; i++) {
+                var book = json.data[i];
+                var name = book.title || "";
+                var slug = book.slug || "";
+                var cover = book.bannerURL || "";
+                var author = book.tacGia || "";
 
-            let name = "";
-            let titleEl = e.select("h3").first();
-            if (titleEl) {
-                name = titleEl.text().trim();
-            } else {
-                name = e.text().trim();
-            }
-            if (!name || name.length < 2) return;
+                if (!name || !slug) continue;
 
-            let cover = "";
-            let imgEl = e.select("img").first();
-            if (!imgEl) {
-                let parent = e.parent();
-                if (parent) imgEl = parent.select("img").first();
+                novelList.push({
+                    name: name,
+                    link: "/truyen/" + slug,
+                    cover: cover,
+                    description: author,
+                    host: BASE_URL
+                });
             }
-            if (imgEl) {
-                cover = imgEl.attr("data-src");
-                if (!cover) cover = imgEl.attr("src");
-            }
-
-            novelList.push({
-                name: name,
-                link: link,
-                cover: cover,
-                host: BASE_URL
-            });
-        });
+        }
 
         // Pagination
-        let next = null;
-        let currentPage = page ? parseInt(page) : 1;
-        let pageLinks = doc.select("a[href*='trang=']");
-        if (pageLinks.size() > 0) {
-            let lastLink = pageLinks.last();
-            let href = lastLink.attr("href");
-            if (href && href.indexOf("trang=") !== -1) {
-                let match = href.match(/trang=(\d+)/);
-                if (match && parseInt(match[1]) > currentPage) {
-                    next = "" + (currentPage + 1);
-                }
-            }
+        var next = null;
+        if (json.totalPages && pageNum < json.totalPages) {
+            next = "" + (pageNum + 1);
         }
 
         return Response.success(novelList, next);

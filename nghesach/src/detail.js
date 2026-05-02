@@ -9,12 +9,12 @@ function execute(url) {
     if (!response.ok) return null;
     
     var doc = response.html();
+    var html = doc.html();
     var slug = getSlugFromUrl(url);
     var book = null;
     
     if (slug) {
-        var rawHtml = doc.html();
-        book = extractBookFromPage(rawHtml, slug);
+        book = findBookObject(html, slug);
     }
     
     if (book) {

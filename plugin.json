@@ -60,13 +60,13 @@
             "locale": "vi_VN"
         },
         {
-            "name": "SS Truyen",
+            "name": "SS Truyện",
             "author": "vBook",
             "path": "https://raw.githubusercontent.com/sonzin/vbook-extension/main/sstruyen/plugin.zip",
-            "version": 1,
-            "source": "https://sstruyen.com.vn",
+            "version": 2,
+            "source": "https://sstruyen.com.vn/",
             "icon": "https://raw.githubusercontent.com/sonzin/vbook-extension/main/sstruyen/icon.png",
-            "description": "Doc truyen tren trang SS Truyen",
+            "description": "Đọc truyện trên trang SS Truyện",
             "type": "novel",
             "locale": "vi_VN"
         }

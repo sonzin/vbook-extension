@@ -1,11 +1,11 @@
 {
     "metadata": {
-        "name": "SS Truyen",
+        "name": "SS Truyện",
         "author": "vBook",
-        "version": 1,
-        "source": "https://sstruyen.com.vn",
-        "regexp": "sstruyen\\.com\\.vn/[\\w-]+$",
-        "description": "Doc truyen tren trang SS Truyen",
+        "version": 2,
+        "source": "https://sstruyen.com.vn/",
+        "regexp": "(www.)?sstruyen\\.com\\.vn/[^/]+$",
+        "description": "Đọc truyện trên trang SS Truyện",
         "locale": "vi_VN",
         "language": "javascript",
         "type": "novel"

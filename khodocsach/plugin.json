@@ -1,0 +1,21 @@
+{
+    "metadata": {
+        "name": "Kho Đọc Sách",
+        "author": "vBook",
+        "version": 1,
+        "source": "https://khodocsach.com/",
+        "regexp": "(www\\.)?khodocsach\\.com/.+",
+        "description": "Đọc truyện trên trang Kho Đọc Sách",
+        "locale": "vi_VN",
+        "language": "javascript",
+        "type": "novel"
+    },
+    "script": {
+        "home": "home.js",
+        "genre": "genre.js",
+        "detail": "detail.js",
+        "search": "search.js",
+        "toc": "toc.js",
+        "chap": "chap.js"
+    }
+}

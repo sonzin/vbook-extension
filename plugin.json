@@ -69,6 +69,17 @@
             "description": "Đọc truyện trên trang SS Truyện",
             "type": "novel",
             "locale": "vi_VN"
+        },
+        {
+            "name": "Kho Đọc Sách",
+            "author": "vBook",
+            "path": "https://raw.githubusercontent.com/sonzin/vbook-extension/main/khodocsach/plugin.zip",
+            "version": 1,
+            "source": "https://khodocsach.com/",
+            "icon": "https://raw.githubusercontent.com/sonzin/vbook-extension/main/khodocsach/icon.png",
+            "description": "Đọc truyện trên trang Kho Đọc Sách",
+            "type": "novel",
+            "locale": "vi_VN"
         }
     ]
 }

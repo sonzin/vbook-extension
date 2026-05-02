@@ -80,7 +80,6 @@
             "description": "Đọc truyện trên trang Kho Đọc Sách",
             "type": "novel",
             "locale": "vi_VN"
-        },
+        }
     ]
-}
 }

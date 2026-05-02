@@ -80,6 +80,17 @@
             "description": "Đọc truyện trên trang Kho Đọc Sách",
             "type": "novel",
             "locale": "vi_VN"
+        },
+        {
+            "name": "Nghe Sách",
+            "author": "vBook",
+            "path": "https://raw.githubusercontent.com/sonzin/vbook-extension/main/nghesach/plugin.zip",
+            "version": 1,
+            "source": "https://nghesach.net/",
+            "icon": "https://raw.githubusercontent.com/sonzin/vbook-extension/main/nghesach/icon.png",
+            "description": "Đọc truyện trên trang Nghe Sách",
+            "type": "novel",
+            "locale": "vi_VN"
         }
     ]
 }

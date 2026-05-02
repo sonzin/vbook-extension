@@ -35,7 +35,8 @@ function execute(url) {
 
         // Description
         let description = "";
-        let descEl = doc.select(".intro").first();
+        let descEl = doc.select("[itemprop='description']").first();
+        if (!descEl) descEl = doc.select(".intro").first();
         if (!descEl) descEl = doc.select(".desc-text").first();
         if (!descEl) descEl = doc.select(".description").first();
         if (descEl) {

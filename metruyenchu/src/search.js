@@ -11,10 +11,9 @@ function execute(key, page) {
         let doc = response.html();
         let novelList = [];
 
-        // Search results use same .truyen-list .item structure
-        doc.select(".truyen-list .item, .list-truyen .item, .search-result .item").forEach(function (e) {
+        // Search results use .truyen-list .item structure
+        doc.select(".truyen-list .item").forEach(function (e) {
             let titleEl = e.select("h3 a").first();
-            if (!titleEl) titleEl = e.select("a").first();
             if (!titleEl) return;
 
             let name = titleEl.text().trim();
@@ -22,7 +21,7 @@ function execute(key, page) {
             if (!name || !link) return;
 
             let cover = "";
-            let coverEl = e.select("a.cover img, .cover img, img").first();
+            let coverEl = e.select(".cover img").first();
             if (coverEl) {
                 cover = coverEl.attr("data-src");
                 if (!cover) cover = coverEl.attr("src");
@@ -46,7 +45,7 @@ function execute(key, page) {
         // Pagination
         let next = null;
         let currentPage = page ? parseInt(page) : 1;
-        let pageLinks = doc.select(".pagination a");
+        let pageLinks = doc.select(".phan-trang a.btn-page");
         if (pageLinks.size() > 0) {
             let lastLink = pageLinks.last();
             let href = lastLink.attr("href");

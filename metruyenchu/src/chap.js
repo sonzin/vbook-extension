@@ -10,22 +10,30 @@ function execute(url) {
     if (response.ok) {
         let doc = response.html();
 
-        // Primary: .vung-doc
-        let contentEl = doc.select(".vung-doc").first();
+        // Primary: .vung-doc .truyen
+        let contentEl = doc.select(".vung-doc .truyen").first();
+        if (!contentEl) contentEl = doc.select(".truyen").first();
         if (contentEl) {
-            // Clean ads and unnecessary elements
             contentEl.select("script").remove();
             contentEl.select("ins").remove();
             contentEl.select("iframe").remove();
             contentEl.select(".ads").remove();
             contentEl.select(".quangcao").remove();
-            contentEl.select(".chapter-title").remove();
-            contentEl.select(".chapter_control").remove();
-            contentEl.select("a.back").remove();
-            contentEl.select("a.next").remove();
-            contentEl.select("a.btn-dschuong").remove();
-
             return Response.success(contentEl.html());
+        }
+
+        // Fallback: .vung-doc
+        let vungDoc = doc.select(".vung-doc").first();
+        if (vungDoc) {
+            vungDoc.select(".chapter-title").remove();
+            vungDoc.select(".chapter_control").remove();
+            vungDoc.select("a.back").remove();
+            vungDoc.select("a.next").remove();
+            vungDoc.select("a.btn-dschuong").remove();
+            vungDoc.select("script").remove();
+            vungDoc.select("ins").remove();
+            vungDoc.select("iframe").remove();
+            return Response.success(vungDoc.html());
         }
 
         // Fallback selectors

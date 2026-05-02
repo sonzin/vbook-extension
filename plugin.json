@@ -58,6 +58,17 @@
             "description": "Đọc truyện trên trang Mê Truyện Chữ",
             "type": "novel",
             "locale": "vi_VN"
+        },
+        {
+            "name": "SS Truyen",
+            "author": "vBook",
+            "path": "https://raw.githubusercontent.com/sonzin/vbook-extension/main/sstruyen/plugin.zip",
+            "version": 1,
+            "source": "https://sstruyen.com.vn",
+            "icon": "https://raw.githubusercontent.com/sonzin/vbook-extension/main/sstruyen/icon.png",
+            "description": "Doc truyen tren trang SS Truyen",
+            "type": "novel",
+            "locale": "vi_VN"
         }
     ]
 }

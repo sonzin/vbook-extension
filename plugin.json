@@ -63,7 +63,7 @@
             "name": "SS Truyện",
             "author": "vBook",
             "path": "https://raw.githubusercontent.com/sonzin/vbook-extension/main/sstruyen/plugin.zip",
-            "version": 2,
+            "version": 3,
             "source": "https://sstruyen.com.vn/",
             "icon": "https://raw.githubusercontent.com/sonzin/vbook-extension/main/sstruyen/icon.png",
             "description": "Đọc truyện trên trang SS Truyện",

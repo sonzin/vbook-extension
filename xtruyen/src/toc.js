@@ -39,11 +39,14 @@ function execute(url) {
             method: "POST",
             headers: {
                 "X-Custom-Auth": "abC0000011111",
-                "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-                "X-Requested-With": "XMLHttpRequest",
-                "Referer": url
+                "Content-Type": "application/x-www-form-urlencoded"
             },
-            data: "manga_id=" + mangaId + "&from=" + range.from + "&to=" + range.to + "&vol="
+            body: {
+                manga_id: mangaId,
+                from: range.from,
+                to: range.to,
+                vol: ""
+            }
         });
 
         if (!apiResponse.ok) break;

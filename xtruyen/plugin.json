@@ -2,7 +2,7 @@
     "metadata": {
         "name": "XTruyện",
         "author": "vBook",
-        "version": 1,
+        "version": 2,
         "source": "https://xtruyen.vn/",
         "regexp": "(www.)?xtruyen\\.vn/truyen/[^/]+/?$",
         "description": "Đọc truyện trên trang XTruyện",

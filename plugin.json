@@ -85,7 +85,7 @@
             "name": "XTruyện",
             "author": "vBook",
             "path": "https://raw.githubusercontent.com/sonzin/vbook-extension/main/xtruyen/plugin.zip",
-            "version": 1,
+            "version": 2,
             "source": "https://xtruyen.vn/",
             "icon": "https://raw.githubusercontent.com/sonzin/vbook-extension/main/xtruyen/icon.png",
             "description": "Đọc truyện trên trang XTruyện",

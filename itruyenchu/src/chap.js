@@ -146,6 +146,24 @@ function textToBytes(text) {
     return bytes;
 }
 
+function ungzipBytes(byteArray) {
+    if (!byteArray || byteArray.length < 10 || byteArray[0] !== 31 || byteArray[1] !== 139) {
+        return bytesToUtf8(byteArray);
+    }
+    var pos = 10;
+    var flags = byteArray[3];
+    if (flags & 4) {
+        var xlen = byteArray[pos] | (byteArray[pos + 1] << 8);
+        pos += 2 + xlen;
+    }
+    if (flags & 8) while (pos < byteArray.length && byteArray[pos++] !== 0) {}
+    if (flags & 16) while (pos < byteArray.length && byteArray[pos++] !== 0) {}
+    if (flags & 2) pos += 2;
+    var deflateData = [];
+    for (var i = pos; i < byteArray.length - 8; i++) deflateData.push(byteArray[i]);
+    return bytesToUtf8(inflate(deflateData));
+}
+
 function ungzipText(raw) {
     var bytes = textToBytes(raw);
     if (bytes.length < 10 || bytes[0] !== 31 || bytes[1] !== 139) return raw;
@@ -226,9 +244,24 @@ function fetchVipContent(slug, chapter) {
 
     response = fetch(content);
     if (!response.ok) return { debug: "S3_FETCH_FAIL:" + response.status };
-    let rawText = response.text();
-    let text = ungzipText(rawText);
-    if (!isReadableText(text)) return { debug: "UNGZIP_FAIL", sample: text.substring(0, 100) };
+    
+    // Try to get raw bytes first (for gzip), fallback to text
+    let text;
+    try {
+        let bytes = response.bytes();
+        if (bytes && bytes.length > 0) {
+            text = ungzipBytes(bytes);
+        }
+    } catch (e) {
+        text = null;
+    }
+    
+    if (!text) {
+        let rawText = response.text();
+        text = ungzipText(rawText);
+    }
+    
+    if (!text || !isReadableText(text)) return { debug: "UNGZIP_FAIL", sample: text ? text.substring(0, 100) : "null" };
     return responseContent(text);
 }
 

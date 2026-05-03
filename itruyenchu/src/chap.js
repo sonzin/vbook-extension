@@ -127,7 +127,7 @@ function bytesToUtf8(bytes) {
     var str = "";
     var i = 0;
     while (i < bytes.length) {
-        var c = bytes[i++];
+        var c = bytes[i++] & 255;
         if (c < 128) str += String.fromCharCode(c);
         else if (c < 224) str += String.fromCharCode(((c & 31) << 6) | (bytes[i++] & 63));
         else if (c < 240) str += String.fromCharCode(((c & 15) << 12) | ((bytes[i++] & 63) << 6) | (bytes[i++] & 63));
@@ -140,6 +140,12 @@ function bytesToUtf8(bytes) {
     return str;
 }
 
+function normalizeBytes(byteArray) {
+    var bytes = [];
+    for (var i = 0; i < byteArray.length; i++) bytes.push(byteArray[i] & 255);
+    return bytes;
+}
+
 function textToBytes(text) {
     var bytes = [];
     for (var i = 0; i < text.length; i++) bytes.push(text.charCodeAt(i) & 255);
@@ -147,6 +153,7 @@ function textToBytes(text) {
 }
 
 function ungzipBytes(byteArray) {
+    byteArray = normalizeBytes(byteArray);
     if (!byteArray || byteArray.length < 10 || byteArray[0] !== 31 || byteArray[1] !== 139) {
         return bytesToUtf8(byteArray);
     }

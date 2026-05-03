@@ -175,7 +175,7 @@ function isReadableText(text) {
 }
 
 function lockedMessage() {
-    return "<p><i>Chương này bị khóa/VIP trên nguồn iTruyenChu. Hãy cấu hình Bearer token từ auth-storage để lấy nội dung đầy đủ.</i></p>";
+    return "<p><i>Chương này bị khóa/VIP trên nguồn iTruyenChu. Hãy dán raw JWT, Bearer token, hoặc nguyên JSON auth-storage vào ô cấu hình extension để lấy nội dung đầy đủ.</i></p>";
 }
 
 function fetchVipContent(slug, chapter) {

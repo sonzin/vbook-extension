@@ -5,13 +5,53 @@ var DATA_URL = "https://assets.ngoctieucac.link";
 var AUTH_COOKIE = "";
 var AUTH_TOKEN = "";
 
+function extractAuthToken(value) {
+    if (!value) return "";
+    value = ("" + value).trim();
+    if (value.indexOf("Bearer ") === 0) value = value.substring(7).trim();
+    if (value.split(".").length === 3 && value.indexOf("{") === -1) return value;
+
+    try {
+        let decoded = decodeURIComponent(value);
+        if (decoded !== value) return extractAuthToken(decoded);
+    } catch (error) {
+    }
+
+    try {
+        let json = JSON.parse(value);
+        return findAuthToken(json);
+    } catch (error) {
+    }
+
+    let match = value.match(/eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+/);
+    return match ? match[0] : "";
+}
+
+function findAuthToken(value) {
+    if (!value) return "";
+    if (typeof value === "string") return extractAuthToken(value);
+    if (typeof value !== "object") return "";
+
+    let preferred = ["accessToken", "token", "jwt", "access_token"];
+    for (let i = 0; i < preferred.length; i++) {
+        if (value[preferred[i]]) {
+            let token = extractAuthToken(value[preferred[i]]);
+            if (token) return token;
+        }
+    }
+
+    for (let key in value) {
+        let token = findAuthToken(value[key]);
+        if (token) return token;
+    }
+    return "";
+}
+
 try {
     if (CONFIG_URL && CONFIG_URL.indexOf("accessToken=") !== -1) {
         AUTH_COOKIE = CONFIG_URL;
-    } else if (CONFIG_URL && CONFIG_URL.indexOf("Bearer ") === 0) {
-        AUTH_TOKEN = CONFIG_URL.substring(7);
-    } else if (CONFIG_URL && CONFIG_URL.split(".").length === 3) {
-        AUTH_TOKEN = CONFIG_URL;
+    } else {
+        AUTH_TOKEN = extractAuthToken(CONFIG_URL);
     }
 } catch (error) {
 }

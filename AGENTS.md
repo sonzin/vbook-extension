@@ -19,7 +19,7 @@
 - VIP chapters should not be blocked before trying authenticated page fetch. Try asset free first, then fetch the chapter page with auth-aware fetch.
 - iTruyenChu login uses `localStorage` key `auth-storage`, not cookies. The browser sends `Authorization: Bearer <jwt>` to `https://api.ngoctieucac.link/auth/profile`.
 - VIP chapter text uses `GET https://api.ngoctieucac.link/chapters/<slug>/content/<chapter>?platform=web` with Bearer auth. The response includes a signed text URL in `content`; fetch that URL and render the returned text.
-- VIP auth should be supplied privately via vBook config as a Bearer token or raw JWT from `auth-storage`; do not hardcode the user's actual token in git.
+- VIP auth should be supplied privately via vBook config as a Bearer token, raw JWT, or full JSON value from `auth-storage`; do not hardcode the user's actual token in git.
 - If the user says they are logged in inside vBook browser, still do not assume extension fetch sees browser localStorage; support private token config explicitly.
 - Bump iTruyenChu version after runtime/package fixes so vBook refreshes cached plugin data.
 

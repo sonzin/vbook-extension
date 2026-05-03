@@ -60,6 +60,7 @@ def api_headers(token: str) -> dict:
 def api_get(url: str, token: str = "") -> requests.Response:
     resp = requests.get(url, headers=api_headers(token), timeout=30)
     resp.raise_for_status()
+    resp.encoding = "utf-8"  # force UTF-8 – API may have BOM
     return resp
 
 def api_get_json(url: str, token: str = "") -> dict:

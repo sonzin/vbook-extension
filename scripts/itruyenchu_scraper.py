@@ -41,13 +41,13 @@ def success(msg: str):
 def load_token(token_arg: str = None) -> str:
     """Look for token in args > env > .itc_token file."""
     if token_arg:
-        return token_arg.strip()
+        return token_arg.lstrip("\ufeff").strip()
     env_token = os.environ.get("ITC_TOKEN", "").strip()
     if env_token:
-        return env_token
+        return env_token.lstrip("\ufeff").strip()
     token_file = Path(__file__).resolve().parent.parent / ".itc_token"
     if token_file.exists():
-        return token_file.read_text("utf-8").strip()
+        return token_file.read_text("utf-8-sig").strip()
     return ""
 
 # ── API helpers ───────────────────────────────────────────────────────

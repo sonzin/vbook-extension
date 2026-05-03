@@ -142,6 +142,54 @@ function bytesToUtf8(bytes) {
 
 function normalizeBytes(byteArray) {
     var bytes = [];
+    if (byteArray) {
+        for (var i = 0; i < byteArray.length; i++) bytes.push(byteArray[i] & 255);
+    }
+    return bytes;
+}
+
+function fetchVipContent(slug, chapter) {
+    if (!AUTH_TOKEN) return { debug: "NO_AUTH_TOKEN" };
+    let apiUrl = API_URL + "/chapters/" + encodeURIComponent(slug) + "/content/" + chapter + "?platform=web";
+    let response = authFetch(apiUrl);
+    if (!response.ok) return { debug: "VIP_API_FAIL:" + response.status };
+
+    let json = response.json();
+    let content = json && json.content ? json.content : null;
+    if (!content) return { debug: "VIP_API_NO_CONTENT", json: JSON.stringify(json) };
+
+    response = fetch(content);
+    if (!response.ok) return { debug: "S3_FETCH_FAIL:" + response.status };
+    
+    // 1. Try response.text() first - vBook might handle encoding if it's plain text
+    let rawText = response.text();
+    if (isReadableText(rawText)) return responseContent(rawText);
+
+    // 2. If not readable, try to get raw bytes and ungzip
+    let text = null;
+    try {
+        let bytes = response.bytes();
+        if (bytes && bytes.length > 0) {
+            text = ungzipBytes(bytes);
+        }
+    } catch (e) {
+        text = "error:" + e.message;
+    }
+    
+    if (text && isReadableText(text)) return responseContent(text);
+    
+    // 3. Last resort: try ungzipText on rawText
+    text = ungzipText(rawText);
+    if (text && isReadableText(text)) return responseContent(text);
+
+    return { debug: "DECODE_FAIL", raw: rawText.substring(0, 50), gzip: text ? text.substring(0, 50) : "null" };
+}
+    }
+    return str;
+}
+
+function normalizeBytes(byteArray) {
+    var bytes = [];
     for (var i = 0; i < byteArray.length; i++) bytes.push(byteArray[i] & 255);
     return bytes;
 }

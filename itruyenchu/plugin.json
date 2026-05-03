@@ -2,7 +2,7 @@
     "metadata": {
         "name": "iTruyenChu",
         "author": "vBook",
-        "version": 14,
+        "version": 15,
         "source": "https://itruyenchu.org/",
         "regexp": "(www\\.)?itruyenchu\\.org/truyen/[^/]+$",
         "description": "Đọc truyện trên trang iTruyenChu",

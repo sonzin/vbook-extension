@@ -8,7 +8,7 @@
             "name": "iTruyenChu",
             "author": "vBook",
             "path": "https://raw.githubusercontent.com/sonzin/vbook-extension/main/itruyenchu/plugin.zip",
-            "version": 5,
+            "version": 6,
             "source": "https://itruyenchu.org/",
             "icon": "https://raw.githubusercontent.com/sonzin/vbook-extension/main/itruyenchu/icon.png",
             "description": "Đọc truyện trên trang iTruyenChu",

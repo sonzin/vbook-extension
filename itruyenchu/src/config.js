@@ -56,6 +56,14 @@ try {
 } catch (error) {
 }
 
+try {
+    if (!AUTH_TOKEN) {
+        let authStorage = localStorage.getItem('auth-storage');
+        if (authStorage) AUTH_TOKEN = extractAuthToken(authStorage);
+    }
+} catch (error) {
+}
+
 function normalizeUrl(url) {
     if (!url) return BASE_URL;
     if (url.startsWith("//")) return "https:" + url;

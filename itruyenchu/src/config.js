@@ -56,6 +56,22 @@ try {
 } catch (error) {
 }
 
+try {
+    if (!AUTH_TOKEN && typeof localStorage !== "undefined") {
+        let authStorage = localStorage.getItem("auth-storage");
+        if (authStorage) AUTH_TOKEN = extractAuthToken(authStorage);
+    }
+} catch (error) {
+}
+
+try {
+    if (!AUTH_TOKEN && typeof window !== "undefined" && window.localStorage) {
+        let authStorage = window.localStorage.getItem("auth-storage");
+        if (authStorage) AUTH_TOKEN = extractAuthToken(authStorage);
+    }
+} catch (error) {
+}
+
 function normalizeUrl(url) {
     if (!url) return BASE_URL;
     if (url.startsWith("//")) return "https:" + url;

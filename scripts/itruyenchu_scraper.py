@@ -86,7 +86,10 @@ def fetch_vip_chapter(slug: str, ch: int, token: str) -> str | None:
     api_ch_url = f"{API_URL}/chapters/{slug}/content/{ch}?platform=web"
     try:
         resp = api_get(api_ch_url, token)
-        payload = resp.json()
+        raw = resp.content
+        if raw[:3] == b"\xef\xbb\xbf":
+            raw = raw[3:]
+        payload = json.loads(raw.decode("utf-8"))
         signed_url = payload.get("content")
         if not signed_url:
             log(f"  └─ API returned no 'content' field. Raw keys: {list(payload.keys())}", "WARN")

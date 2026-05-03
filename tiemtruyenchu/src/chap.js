@@ -11,7 +11,7 @@ function execute(url) {
         let doc = response.html();
 
         // Primary: .chapter-content
-        let contentEl = doc.select(".chapter-content").first();
+        let contentEl = doc.select(".chapter-content, #chapter-content, .reading-content, .chapter-body, #content-chapter").first();
         if (contentEl) {
             // Clean ads and unnecessary elements
             contentEl.select("script").remove();
@@ -24,7 +24,7 @@ function execute(url) {
         }
 
         // Fallback selectors
-        let fallbackSelectors = ["#chapter-content", ".chapter-c", "#content", ".reading-content", ".vung-doc"];
+        let fallbackSelectors = [".chapter-c", "#content", ".vung-doc", "article", ".content"]; 
         for (var i = 0; i < fallbackSelectors.length; i++) {
             let el = doc.select(fallbackSelectors[i]).first();
             if (el) {

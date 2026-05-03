@@ -18,10 +18,15 @@ function execute(url, page) {
         let doc = response.html();
         let novelList = [];
 
-        doc.select(".story-item").forEach(function (e) {
-            let titleEl = e.select(".story-title").first();
+        let itemEls = doc.select(".story-item");
+        if (itemEls.size() === 0) {
+            itemEls = doc.select(".top-1-card, a[href*='/truyen/'].text-decoration-none.d-flex, a[href*='/truyen/'].text-decoration-none.d-block");
+        }
+
+        itemEls.forEach(function (e) {
+            let titleEl = e.select(".story-title, .top-1-title, .rank-title, a[href*='/truyen/'].fw-bold, a[href*='/truyen/']").first();
             if (!titleEl) {
-                titleEl = e.select("a").first();
+                titleEl = e.attr("href") && e.attr("href").indexOf("/truyen/") !== -1 ? e : e.select("a").first();
             }
             if (!titleEl) return;
 
@@ -33,7 +38,7 @@ function execute(url, page) {
                 link = titleEl.attr("href");
             }
 
-            let coverEl = e.select("img.story-poster").first();
+            let coverEl = e.select("img.story-poster, img.top-1-img, img[src*='/stories/']").first();
             if (!coverEl) {
                 coverEl = e.select("img").first();
             }
@@ -44,7 +49,7 @@ function execute(url, page) {
             }
 
             let desc = "";
-            let metaEl = e.select(".story-meta").first();
+            let metaEl = e.select(".story-meta, .small.text-muted, .text-muted").first();
             if (metaEl) desc = metaEl.text();
 
             novelList.push({

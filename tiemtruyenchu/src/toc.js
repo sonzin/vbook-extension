@@ -14,7 +14,7 @@ function execute(url) {
         let el = doc.select("#chapter-list-container a");
         if (el.size() === 0) {
             // Fallback: try other selectors
-            el = doc.select(".chapter-list a[href*='chuong'], .chapter-list a[href*='doc-truyen']");
+            el = doc.select(".chapter-list a[href*='chuong'], .chapter-list a[href*='doc-truyen'], a.chapter-item-link");
         }
         if (el.size() === 0) {
             el = doc.select("a[href*='/doc-truyen/']");
@@ -25,7 +25,7 @@ function execute(url) {
             let e = el.get(i);
             let name = e.text().trim();
             let chapterUrl = e.attr("href");
-            if (name && chapterUrl) {
+            if (name && chapterUrl && chapterUrl.indexOf("/chuong/") !== -1) {
                 data.push({
                     name: name,
                     url: chapterUrl,

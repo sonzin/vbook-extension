@@ -12,14 +12,13 @@ function execute(url) {
 
         // Title
         let name = "";
-        let titleEl = doc.select(".story-title").first();
+        let titleEl = doc.select(".story-title, .book-title, .novel-title, h1.fw-bold").first();
         if (!titleEl) titleEl = doc.select("h1").first();
         if (titleEl) name = titleEl.text().trim();
 
         // Cover image
         let cover = "";
-        let coverEl = doc.select("img.story-poster").first();
-        if (!coverEl) coverEl = doc.select(".story-cover img").first();
+        let coverEl = doc.select("img.story-poster, .story-cover img, img[src*='/stories/'][src*='poster'], img[alt]").first();
         if (coverEl) {
             cover = coverEl.attr("data-src");
             if (!cover) cover = coverEl.attr("src");
@@ -27,18 +26,18 @@ function execute(url) {
 
         // Author
         let author = "";
-        let authorEl = doc.select("a[href*='tac-gia']").first();
+        let authorEl = doc.select("a[href*='tac-gia'], a[href*='author'], a[href*='author_ori']").first();
         if (authorEl) {
             author = authorEl.text().trim();
         }
 
         // Description - look for the tab content or intro section
         let description = "";
-        let descEl = doc.select(".story-desc").first();
+        let descEl = doc.select(".story-desc, .book-desc, .novel-desc, #story-description, #description").first();
         if (!descEl) descEl = doc.select("[itemprop='description']").first();
         if (!descEl) {
             // Try to find description in tab panels or content sections
-            let panels = doc.select(".tab-pane, .bg-white.rounded.shadow-sm.p-3");
+            let panels = doc.select(".tab-pane, .bg-white.rounded.shadow-sm.p-3, .card-body");
             if (panels.size() > 0) {
                 descEl = panels.first();
             }
@@ -51,7 +50,7 @@ function execute(url) {
         let ongoing = true;
         let statusEl = doc.select(".story-status").first();
         if (!statusEl) statusEl = doc.select(".label-status").first();
-        if (!statusEl) statusEl = doc.select(".status").first();
+        if (!statusEl) statusEl = doc.select(".status, [class*='status']").first();
         if (statusEl) {
             let statusText = statusEl.text().trim().toLowerCase();
             if (statusText.indexOf("hoàn thành") !== -1 || statusText.indexOf("hoan thanh") !== -1 || statusText.indexOf("full") !== -1 || statusText.indexOf("hoàn") !== -1) {
@@ -61,7 +60,7 @@ function execute(url) {
 
         // Genres
         let genres = [];
-        doc.select("a[href*='cat=']").forEach(function (e) {
+        doc.select("a[href*='cat='], a[href*='the-loai']").forEach(function (e) {
             let title = e.text().trim();
             if (title) {
                 genres.push({
@@ -93,20 +92,20 @@ function getDetail(doc) {
     var lines = [];
 
     // Author
-    var authorEl = doc.select("a[href*='tac-gia']").first();
+    var authorEl = doc.select("a[href*='tac-gia'], a[href*='author'], a[href*='author_ori']").first();
     if (authorEl) {
         lines.push("<b>Tác giả:</b> " + authorEl.text().trim());
     }
 
     // Status
     var statusEl = doc.select(".story-status").first();
-    if (!statusEl) statusEl = doc.select(".status").first();
+    if (!statusEl) statusEl = doc.select(".status, [class*='status']").first();
     if (statusEl) {
         lines.push("<b>Trạng thái:</b> " + statusEl.text().trim());
     }
 
     // Genres
-    var genreEls = doc.select("a[href*='cat=']");
+    var genreEls = doc.select("a[href*='cat='], a[href*='the-loai']");
     if (genreEls.size() > 0) {
         var genreTexts = [];
         genreEls.forEach(function (e) {

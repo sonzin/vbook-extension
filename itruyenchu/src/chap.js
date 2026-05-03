@@ -176,9 +176,13 @@ function isReadableText(text) {
 
 function lockedMessage() {
     let lsStatus = "unknown";
+    let lsValue = "";
     try {
         if (typeof localStorage !== "undefined") {
             lsStatus = "available";
+            try {
+                lsValue = localStorage.getItem("auth-storage") || "";
+            } catch (e) {}
         } else {
             lsStatus = "unavailable";
         }
@@ -189,7 +193,7 @@ function lockedMessage() {
     let configStatus = "unknown";
     try {
         if (CONFIG_URL) {
-            configStatus = "set:" + CONFIG_URL.substring(0, 20) + "...";
+            configStatus = "set:" + CONFIG_URL.substring(0, 30) + "...";
         } else {
             configStatus = "unset";
         }
@@ -197,25 +201,28 @@ function lockedMessage() {
         configStatus = "error";
     }
     
-    let tokenStatus = AUTH_TOKEN ? ("present:" + AUTH_TOKEN.substring(0, 15) + "...") : "missing";
+    let tokenStatus = AUTH_TOKEN ? ("present:" + AUTH_TOKEN.substring(0, 20) + "...") : "missing";
+    let cookieStatus = AUTH_COOKIE ? ("present:" + AUTH_COOKIE.substring(0, 20) + "...") : "missing";
     
-    return "<p><i>Chương này bị khóa/VIP. Debug: TOKEN=" + tokenStatus + " | LS=" + lsStatus + " | CONFIG=" + configStatus + "</i></p>";
+    return "<p><i>Chương này bị khóa/VIP. Debug: TOKEN=" + tokenStatus + " | COOKIE=" + cookieStatus + " | LS=" + lsStatus + " | LS_VAL=" + (lsValue ? "yes" : "no") + " | CONFIG=" + configStatus + "</i></p>";
 }
 
 function fetchVipContent(slug, chapter) {
-    if (!AUTH_TOKEN) return null;
+    if (!AUTH_TOKEN) return { debug: "NO_AUTH_TOKEN" };
     let apiUrl = API_URL + "/chapters/" + encodeURIComponent(slug) + "/content/" + chapter + "?platform=web";
     let response = authFetch(apiUrl);
-    if (!response.ok) return null;
+    if (!response.ok) return { debug: "VIP_API_FAIL:" + response.status };
 
     let json = response.json();
     let content = json && json.content ? json.content : null;
-    if (!content) return null;
+    if (!content) return { debug: "VIP_API_NO_CONTENT", json: JSON.stringify(json) };
 
     response = fetch(content);
-    if (!response.ok) return null;
-    let text = ungzipText(response.text());
-    return isReadableText(text) ? responseContent(text) : null;
+    if (!response.ok) return { debug: "S3_FETCH_FAIL:" + response.status };
+    let rawText = response.text();
+    let text = ungzipText(rawText);
+    if (!isReadableText(text)) return { debug: "UNGZIP_FAIL", sample: text.substring(0, 100) };
+    return responseContent(text);
 }
 
 function extractChapterHtml(doc) {
@@ -265,14 +272,31 @@ function execute(url) {
         if (html) return Response.success(html);
     }
 
-    let vipHtml = fetchVipContent(slug, chapter);
-    if (vipHtml) return Response.success(vipHtml);
+    let vipResult = fetchVipContent(slug, chapter);
+    if (typeof vipResult === "string" && vipResult) return Response.success(vipResult);
+    if (vipResult && vipResult.debug) {
+        return Response.success("<p><i>VIP Debug: " + vipResult.debug + (vipResult.json ? " | JSON:" + vipResult.json.substring(0, 100) : "") + (vipResult.sample ? " | SAMPLE:" + vipResult.sample : "") + "</i></p>" + lockedMessage());
+    }
 
     response = authFetch(url);
     if (response.ok) {
         let doc = response.html();
         let html = extractChapterHtml(doc);
-        if (html && (isFreeBook || chapter <= lockChapters || html.indexOf("Mở khóa") === -1)) return Response.success(html);
+        if (html && (isFreeBook || chapter <= lockChapters || html.indexOf("Mở khóa") === -1)) {
+            if (html.indexOf("Chương này bị khóa") === -1 && html.indexOf("VIP") === -1 && html.indexOf("chỉ dành cho thành viên") === -1) {
+                return Response.success(html);
+            }
+        }
+    }
+
+    response = fetch(url);
+    if (response.ok) {
+        let html = response.text();
+        if (html && html.indexOf("Mở khóa") === -1 && html.indexOf("chỉ dành cho thành viên") === -1) {
+            let doc = response.html();
+            let content = extractChapterHtml(doc);
+            if (content) return Response.success(content);
+        }
     }
 
     return Response.success(lockedMessage());

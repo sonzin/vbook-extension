@@ -175,7 +175,38 @@ function isReadableText(text) {
 }
 
 function lockedMessage() {
-    return "<p><i>Chương này bị khóa/VIP trên nguồn iTruyenChu nên extension không lấy nội dung đầy đủ.</i></p>";
+    return "<p><i>Chương này bị khóa/VIP trên nguồn iTruyenChu. Hãy đăng nhập VIP trong trình duyệt vBook hoặc cấu hình cookie accessToken để lấy nội dung đầy đủ.</i></p>";
+}
+
+function extractChapterHtml(doc) {
+    let selectors = [
+        ".content .space-y-3",
+        "div.space-y-3",
+        "div[class*='space-y-3']",
+        ".content",
+        ".chapter-content",
+        "#chapter-content",
+        "#content",
+        ".reading-content"
+    ];
+
+    for (let i = 0; i < selectors.length; i++) {
+        let content = doc.select(selectors[i]).first();
+        if (content) {
+            content.select("script, button, svg, ins, iframe").remove();
+            let html = content.html();
+            if (cleanText(stripHtml(html))) return html;
+        }
+    }
+
+    let paragraphs = doc.select("p.leading-relaxed");
+    if (paragraphs.size() > 0) {
+        let html = "";
+        for (let i = 0; i < paragraphs.size(); i++) html += paragraphs.get(i).outerHtml();
+        if (cleanText(stripHtml(html))) return html;
+    }
+
+    return null;
 }
 
 function execute(url) {
@@ -186,10 +217,6 @@ function execute(url) {
     let lockChapters = book && book.lockChapters ? parseInt(book.lockChapters) : 50;
     let isFreeBook = book && book.isFree;
 
-    if (!isFreeBook && chapter > lockChapters) {
-        return Response.success(lockedMessage());
-    }
-
     let freeUrl = DATA_URL + "/free/" + slug + "/chuong-" + chapter + ".txt";
     let response = fetch(freeUrl);
     if (response.ok) {
@@ -198,14 +225,11 @@ function execute(url) {
         if (html) return Response.success(html);
     }
 
-    let doc = fetchDocument(url);
-    if (doc) {
-        let content = doc.select(".content .space-y-3, .content, div[class*='space-y-3']").first();
-        if (content) {
-            content.select("script, button, svg").remove();
-            let html = content.html();
-            if (cleanText(stripHtml(html)) && chapter <= lockChapters) return Response.success(html);
-        }
+    response = authFetch(url);
+    if (response.ok) {
+        let doc = response.html();
+        let html = extractChapterHtml(doc);
+        if (html && (isFreeBook || chapter <= lockChapters || html.indexOf("Mở khóa") === -1)) return Response.success(html);
     }
 
     return Response.success(lockedMessage());

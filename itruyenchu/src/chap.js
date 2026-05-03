@@ -177,11 +177,13 @@ function isReadableText(text) {
 function lockedMessage() {
     let lsStatus = "unknown";
     let lsValue = "";
+    let lsRaw = "";
     try {
         if (typeof localStorage !== "undefined") {
             lsStatus = "available";
             try {
                 lsValue = localStorage.getItem("auth-storage") || "";
+                lsRaw = lsValue.substring(0, 50);
             } catch (e) {}
         } else {
             lsStatus = "unavailable";
@@ -204,7 +206,12 @@ function lockedMessage() {
     let tokenStatus = AUTH_TOKEN ? ("present:" + AUTH_TOKEN.substring(0, 20) + "...") : "missing";
     let cookieStatus = AUTH_COOKIE ? ("present:" + AUTH_COOKIE.substring(0, 20) + "...") : "missing";
     
-    return "<p><i>Chương này bị khóa/VIP. Debug: TOKEN=" + tokenStatus + " | COOKIE=" + cookieStatus + " | LS=" + lsStatus + " | LS_VAL=" + (lsValue ? "yes" : "no") + " | CONFIG=" + configStatus + "</i></p>";
+    let extracted = "";
+    try {
+        if (lsValue) extracted = extractAuthToken(lsValue);
+    } catch (e) {}
+    
+    return "<p><i>Chương này bị khóa/VIP. Debug: TOKEN=" + tokenStatus + " | COOKIE=" + cookieStatus + " | LS=" + lsStatus + " | LS_RAW=" + lsRaw + " | EXTRACTED=" + (extracted ? extracted.substring(0, 20) : "empty") + " | CONFIG=" + configStatus + "</i></p>";
 }
 
 function fetchVipContent(slug, chapter) {

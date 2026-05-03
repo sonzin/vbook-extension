@@ -175,7 +175,31 @@ function isReadableText(text) {
 }
 
 function lockedMessage() {
-    return "<p><i>Chương này bị khóa/VIP trên nguồn iTruyenChu. Hãy dán raw JWT, Bearer token, hoặc nguyên JSON auth-storage vào ô cấu hình extension để lấy nội dung đầy đủ.</i></p>";
+    let lsStatus = "unknown";
+    try {
+        if (typeof localStorage !== "undefined") {
+            lsStatus = "available";
+        } else {
+            lsStatus = "unavailable";
+        }
+    } catch (e) {
+        lsStatus = "error:" + e.message;
+    }
+    
+    let configStatus = "unknown";
+    try {
+        if (CONFIG_URL) {
+            configStatus = "set:" + CONFIG_URL.substring(0, 20) + "...";
+        } else {
+            configStatus = "unset";
+        }
+    } catch (e) {
+        configStatus = "error";
+    }
+    
+    let tokenStatus = AUTH_TOKEN ? ("present:" + AUTH_TOKEN.substring(0, 15) + "...") : "missing";
+    
+    return "<p><i>Chương này bị khóa/VIP. Debug: TOKEN=" + tokenStatus + " | LS=" + lsStatus + " | CONFIG=" + configStatus + "</i></p>";
 }
 
 function fetchVipContent(slug, chapter) {

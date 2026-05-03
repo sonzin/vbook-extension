@@ -271,6 +271,17 @@ function execute(url) {
     let lockChapters = book && book.lockChapters ? parseInt(book.lockChapters) : 50;
     let isFreeBook = book && book.isFree;
 
+    // Read auth token fresh from localStorage (may not be available at config.js load time)
+    try {
+        if (!AUTH_TOKEN && typeof localStorage !== "undefined") {
+            let authStorage = localStorage.getItem("auth-storage");
+            if (authStorage) {
+                let token = extractAuthToken(authStorage);
+                if (token) AUTH_TOKEN = token;
+            }
+        }
+    } catch (e) {}
+
     let freeUrl = DATA_URL + "/free/" + slug + "/chuong-" + chapter + ".txt";
     let response = fetch(freeUrl);
     if (response.ok) {

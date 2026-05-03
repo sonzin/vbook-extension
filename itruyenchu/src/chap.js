@@ -175,7 +175,23 @@ function isReadableText(text) {
 }
 
 function lockedMessage() {
-    return "<p><i>Chương này bị khóa/VIP trên nguồn iTruyenChu. Hãy đăng nhập VIP trong trình duyệt vBook hoặc cấu hình cookie accessToken để lấy nội dung đầy đủ.</i></p>";
+    return "<p><i>Chương này bị khóa/VIP trên nguồn iTruyenChu. Hãy cấu hình Bearer token từ auth-storage để lấy nội dung đầy đủ.</i></p>";
+}
+
+function fetchVipContent(slug, chapter) {
+    if (!AUTH_TOKEN) return null;
+    let apiUrl = API_URL + "/chapters/" + encodeURIComponent(slug) + "/content/" + chapter + "?platform=web";
+    let response = authFetch(apiUrl);
+    if (!response.ok) return null;
+
+    let json = response.json();
+    let content = json && json.content ? json.content : null;
+    if (!content) return null;
+
+    response = fetch(content);
+    if (!response.ok) return null;
+    let text = ungzipText(response.text());
+    return isReadableText(text) ? responseContent(text) : null;
 }
 
 function extractChapterHtml(doc) {
@@ -224,6 +240,9 @@ function execute(url) {
         let html = isReadableText(text) ? responseContent(text) : null;
         if (html) return Response.success(html);
     }
+
+    let vipHtml = fetchVipContent(slug, chapter);
+    if (vipHtml) return Response.success(vipHtml);
 
     response = authFetch(url);
     if (response.ok) {

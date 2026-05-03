@@ -17,8 +17,10 @@
 - Asset/data base: `https://assets.ngoctieucac.link`.
 - Free chapters can come from `https://assets.ngoctieucac.link/free/<slug>/chuong-<number>.txt` and may be gzip-compressed.
 - VIP chapters should not be blocked before trying authenticated page fetch. Try asset free first, then fetch the chapter page with auth-aware fetch.
-- VIP auth should be supplied privately via vBook config as a cookie string like `accessToken=...; premiumUntil=...`; do not hardcode the user's actual cookie in git.
-- If the user says they are logged in inside vBook browser, still allow plain fetch fallback because the runtime may share WebView cookies.
+- iTruyenChu login uses `localStorage` key `auth-storage`, not cookies. The browser sends `Authorization: Bearer <jwt>` to `https://api.ngoctieucac.link/auth/profile`.
+- VIP chapter text uses `GET https://api.ngoctieucac.link/chapters/<slug>/content/<chapter>?platform=web` with Bearer auth. The response includes a signed text URL in `content`; fetch that URL and render the returned text.
+- VIP auth should be supplied privately via vBook config as a Bearer token or raw JWT from `auth-storage`; do not hardcode the user's actual token in git.
+- If the user says they are logged in inside vBook browser, still do not assume extension fetch sees browser localStorage; support private token config explicitly.
 - Bump iTruyenChu version after runtime/package fixes so vBook refreshes cached plugin data.
 
 ## Current Known Dirty Files To Avoid Unless Requested

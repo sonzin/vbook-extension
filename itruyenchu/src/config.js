@@ -3,10 +3,15 @@ var API_URL = "https://api.ngoctieucac.link";
 var ASSET_URL = "https://assets.itruyenchu.org";
 var DATA_URL = "https://assets.ngoctieucac.link";
 var AUTH_COOKIE = "";
+var AUTH_TOKEN = "";
 
 try {
     if (CONFIG_URL && CONFIG_URL.indexOf("accessToken=") !== -1) {
         AUTH_COOKIE = CONFIG_URL;
+    } else if (CONFIG_URL && CONFIG_URL.indexOf("Bearer ") === 0) {
+        AUTH_TOKEN = CONFIG_URL.substring(7);
+    } else if (CONFIG_URL && CONFIG_URL.split(".").length === 3) {
+        AUTH_TOKEN = CONFIG_URL;
     }
 } catch (error) {
 }
@@ -63,6 +68,13 @@ function fetchDocument(url) {
 }
 
 function authFetch(url) {
+    if (AUTH_TOKEN) {
+        return fetch(normalizeUrl(url), {
+            headers: {
+                "Authorization": "Bearer " + AUTH_TOKEN
+            }
+        });
+    }
     if (AUTH_COOKIE) {
         return fetch(normalizeUrl(url), {
             headers: {

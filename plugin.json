@@ -5,6 +5,17 @@
     },
     "data": [
         {
+            "name": "iTruyenChu",
+            "author": "vBook",
+            "path": "https://raw.githubusercontent.com/sonzin/vbook-extension/main/itruyenchu/plugin.zip",
+            "version": 1,
+            "source": "https://itruyenchu.org/",
+            "icon": "https://raw.githubusercontent.com/sonzin/vbook-extension/main/itruyenchu/icon.png",
+            "description": "Đọc truyện trên trang iTruyenChu",
+            "type": "novel",
+            "locale": "vi_VN"
+        },
+        {
             "name": "Ngọc Tiếu Các",
             "author": "Bin123",
             "path": "https://raw.githubusercontent.com/sonzin/vbook-extension/main/ngoctieucac/plugin.zip",

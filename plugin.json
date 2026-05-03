@@ -80,6 +80,17 @@
             "description": "Đọc truyện trên trang Kho Đọc Sách",
             "type": "novel",
             "locale": "vi_VN"
+        },
+        {
+            "name": "XTruyện",
+            "author": "vBook",
+            "path": "https://raw.githubusercontent.com/sonzin/vbook-extension/main/xtruyen/plugin.zip",
+            "version": 1,
+            "source": "https://xtruyen.vn/",
+            "icon": "https://raw.githubusercontent.com/sonzin/vbook-extension/main/xtruyen/icon.png",
+            "description": "Đọc truyện trên trang XTruyện",
+            "type": "novel",
+            "locale": "vi_VN"
         }
     ]
 }
